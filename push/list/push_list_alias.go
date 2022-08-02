@@ -1,26 +1,25 @@
-// 别名批量推
 package list
 
 import (
 	"context"
 	"encoding/json"
-	"github.com/qnsoft/unipush/publics"
+	"github.com/DanPlayer/unipush/publics"
 )
 
-// 别名批量推参数
+// PushListAliasParam 别名批量推参数
 type PushListAliasParam struct {
 	Audience *publics.Audience `json:"audience"` // 必须字段，用alias数组，，注意这里 ！！数组长度不大于200
 	IsAsync  bool              `json:"is_async"` // 非必须,默认值:false,是否异步推送，异步推送不会返回data,is_async为false时返回data
 	TaskId   string            `json:"taskid"`   // 必须字段,默认值:无,使用创建消息接口返回的taskId，可以多次使用
 }
 
-// 别名批量推返回
+// PushListAliasResult 别名批量推返回
 type PushListAliasResult struct {
 	publics.PublicResult
 	Data map[string]map[string]string `json:"data"`
 }
 
-// 别名批量推
+// PushListAlias 别名批量推
 func PushListAlias(ctx context.Context, config publics.GeTuiConfig, token string, param *PushListAliasParam) (*PushListAliasResult, error) {
 
 	url := publics.ApiUrl + config.AppId + "/push/list/alias"

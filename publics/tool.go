@@ -1,4 +1,3 @@
-// 公共方法
 package publics
 
 import (
@@ -12,7 +11,7 @@ import (
 	"time"
 )
 
-// 获取加密后的字符串
+// Signature 获取加密后的字符串
 func Signature(appKey string, masterSecret string) (string, string) {
 	timestamp := strconv.FormatInt(time.Now().UnixNano()/1000000, 10) //签名开始生成毫秒时间
 	original := appKey + timestamp + masterSecret
@@ -22,7 +21,7 @@ func Signature(appKey string, masterSecret string) (string, string) {
 	return fmt.Sprintf("%x", sum), timestamp
 }
 
-//post请求
+// RestFulRequest post请求
 func RestFulRequest(ctx context.Context, bodyByte []byte, url, action, token string) (string, error) {
 	//创建客户端实例
 	client := &http.Client{

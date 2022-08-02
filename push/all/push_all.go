@@ -1,13 +1,12 @@
-// 群推
 package all
 
 import (
 	"context"
 	"encoding/json"
-	"github.com/qnsoft/unipush/publics"
+	"github.com/DanPlayer/unipush/publics"
 )
 
-// 群推参数
+// PushAllParam 群推参数
 type PushAllParam struct {
 	RequestId   string               `json:"request_id"`   // 必须，请求唯一标识号，10-32位之间；如果request_id重复，会导致消息丢失
 	GroupName   string               `json:"group_name"`   // 非必须，任务组名
@@ -17,13 +16,13 @@ type PushAllParam struct {
 	PushChannel *publics.PushChannel `json:"push_channel"` // 非必须，厂商推送消息参数，包含ios消息参数，android厂商消息参数
 }
 
-// 群推返回
+// PushAllResult 群推返回
 type PushAllResult struct {
 	publics.PublicResult
 	Data map[string]string `json:"data"`
 }
 
-// 群推
+// PushAll 群推
 func PushAll(ctx context.Context, config publics.GeTuiConfig, token string, param *PushAllParam) (*PushAllResult, error) {
 
 	url := publics.ApiUrl + config.AppId + "/push/all"

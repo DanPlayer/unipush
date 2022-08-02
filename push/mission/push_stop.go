@@ -1,23 +1,24 @@
-// 停止任务,对正处于推送状态，或者未接收的消息停止下发
 package mission
 
 import (
 	"context"
 	"encoding/json"
-	"github.com/qnsoft/unipush/publics"
+	"github.com/DanPlayer/unipush/publics"
 )
 
-// 停止任务参数
+// PushStopParam 停止任务参数
 type PushStopParam struct {
 	TaskId string `json:"taskId"`
 }
 
-// 停止任务返回
+// PushStopResult 停止任务返回
 type PushStopResult struct {
 	publics.PublicResult
 }
 
+// PushStop
 // 停止任务
+// 停止任务,对正处于推送状态，或者未接收的消息停止下发
 func PushStop(ctx context.Context, config publics.GeTuiConfig, token string, param *PushStopParam) (*PushStopResult, error) {
 	url := publics.ApiUrl + config.AppId + "/task/" + param.TaskId
 	bodyByte, err := json.Marshal(param)

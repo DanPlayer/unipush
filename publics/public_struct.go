@@ -1,11 +1,10 @@
-// 公共常量、结构体等
 package publics
 
 const (
 	ApiUrl = "https://restapi.getui.com/v2/" // 个推开放平台接口前缀(BaseUrl)
 )
 
-// 个推配置文件
+// GeTuiConfig 个推配置文件
 type GeTuiConfig struct {
 	AppId        string `toml:"app_id"`
 	AppKey       string `toml:"app_key"`
@@ -13,39 +12,37 @@ type GeTuiConfig struct {
 	MasterSecret string `toml:"master_secret"`
 }
 
-/*
- * 公共返回结构示例
- * {
- *	 "code": 0,
- *	 "msg": "",
- *	 "data": {
- *		 "$taskid": {
- *			 "$cid":"$status"
- *		 }
- * 	 }
- * }
- *
- * {
- *	 "code": 0,
- *	 "msg": "",
- *	 "data": {
- *		 "$taskid": ""
- * 	 }
- * }
- *
- * $taskid:任务编号
- * $cid:App的用户唯一标识
- * $status:
- * successed_offline: 离线下发(包含厂商通道下发)
- * successed_online: 在线下发
- * successed_ignore: 最近90天内不活跃用户不下发
- */
+// PublicResult
+// 公共返回结构示例
+// * {
+// *	 "code": 0,
+// *	 "msg": "",
+// *	 "data": {
+// *		 "$taskid": {
+// *			 "$cid":"$status"
+// *		 }
+// * 	 }
+// * }
+// *
+// * {
+// *	 "code": 0,
+// *	 "msg": "",
+// *	 "data": {
+// *		 "$taskid": ""
+// * 	 }
+// * }
+// $taskid:任务编号
+// $cid:App的用户唯一标识
+// $status:
+// successed_offline: 离线下发(包含厂商通道下发)
+// successed_online: 在线下发
+// successed_ignore: 最近90天内不活跃用户不下发
 type PublicResult struct {
 	Code int    `json:"code"` // code返回码，0为成功，其他请看http://docs.getui.com/getui/server/rest_v2/code/?id=doc-title-1
 	Msg  string `json:"msg"`
 }
 
-// 推送目标用户
+// Audience 推送目标用户
 type Audience struct {
 	Cid           []string `json:"cid,omitempty"`             // cid数组，单推只能填一个cid，批量推可以填写多个（数组长度小于200）
 	Alias         []string `json:"alias,omitempty"`           // 别名数组，单推只能填一个别名，批量推可以填写多个（数组长度小于200）
@@ -61,7 +58,7 @@ type Tag struct {
 	// eg. 需要发送给城市在A,B,C里面，没有设置tagtest标签，手机型号为android的用户，用条件交并补功能可以实现，city(A|B|C) && !tag(tagtest) && phonetype(android)
 }
 
-// 推送条件设置
+// Settings 推送条件设置
 type Settings struct {
 	TTL          int64     `json:"ttl,omitempty"`           // 非必须，默认一小时，消息离线时间设置，单位毫秒，-1表示不设离线，-1 ～ 3 * 24 * 3600 * 1000(3天)之间
 	Strategy     *Strategy `json:"strategy,omitempty"`      // 非必须，默认值：{"strategy":{"default":1}}，厂商通道策略
@@ -69,7 +66,7 @@ type Settings struct {
 	ScheduleTime int64     `json:"schedule_time,omitempty"` // 非必须，定时推送时间，必须是7天内的时间，格式：毫秒时间戳
 }
 
-// 厂商通道策略
+// Strategy 厂商通道策略
 type Strategy struct {
 	Default int `json:"default,omitempty"`
 	/*
@@ -90,7 +87,7 @@ type Strategy struct {
 	Op  int `json:"op,omitempty"`  // 非必须，通道策略1-4，表示含义同上
 }
 
-// 个推推送消息参数
+// PushMessage 个推推送消息参数
 type PushMessage struct {
 	Duration string `json:"duration,omitempty"`
 	/*
@@ -107,7 +104,7 @@ type PushMessage struct {
 	Revoke *Revoke `json:"revoke,omitempty"` // 非必须，撤回消息时使用，与notification、transmission三选一，都填写时报错
 }
 
-// 通知消息内容，仅支持安卓系统(不建议选这个，建议用穿透模板【transmission】)
+// Notification 通知消息内容，仅支持安卓系统(不建议选这个，建议用穿透模板【transmission】)
 type Notification struct {
 	Title        string `json:"title"`        // 必须，通知消息标题，长度 ≤ 50
 	Body         string `json:"body"`         // 必须，通知消息内容，长度 ≤ 256
@@ -191,19 +188,19 @@ type Options struct {
 	 */
 }
 
-// 撤回消息时使用，与notification、transmission三选一，都填写时报错
+// Revoke 撤回消息时使用，与notification、transmission三选一，都填写时报错
 type Revoke struct {
 	OldTaskId string `json:"old_task_id"`     // 必须，需要撤回的taskId
 	Force     bool   `json:"force,omitempty"` // 非必须，【小心使用】在没有找到对应的taskId，是否把对应appId下所有的通知都撤回
 }
 
-// 厂商推送消息参数，包含ios消息参数，android厂商消息参数
+// PushChannel 厂商推送消息参数，包含ios消息参数，android厂商消息参数
 type PushChannel struct {
 	Ios     *IosChannel     `json:"ios,omitempty"`     // 非必须，ios通道推送消息内容
 	Android *AndroidChannel `json:"android,omitempty"` // 非必须，android通道推送消息内容
 }
 
-// ios厂商通道消息
+// IosChannel ios厂商通道消息
 type IosChannel struct {
 	// 具体参数含义详见苹果APNs文档
 	// https://developer.apple.com/library/archive/documentation/NetworkingInternet/Conceptual/RemoteNotificationsPG/PayloadKeyReference.html
@@ -215,7 +212,7 @@ type IosChannel struct {
 	ApnsCollapseId string        `json:"apns-collapse-id,omitempty"` // 非必须，使用相同的apns-collapse-id可以覆盖之前的消息
 }
 
-// 推送通知消息内容
+// Aps 推送通知消息内容
 type Aps struct {
 	Alert            *Alert `json:"alert"` // 非必须，通知消息
 	ContentAvailable int    `json:"content-available"`
@@ -230,7 +227,7 @@ type Aps struct {
 	ThreadId string `json:"thread-id,omitempty"` // 非必须，ios的远程通知通过该属性对通知进行分组，仅支持iOS 12.0以上版本
 }
 
-// 通知消息
+// Alert 通知消息
 type Alert struct {
 	Title           string   `json:"title,omitempty"`             // 非必须，通知消息标题
 	Body            string   `json:"body,omitempty"`              // 非必须，通知消息内容
@@ -245,19 +242,19 @@ type Alert struct {
 	SubTitleLocArgs []string `json:"subtitle-loc-args,omitempty"` // 非必须，当前本地化子标题内容中需要置换的变量参数 ,仅支持iOS8.2以上版本
 }
 
-// 多媒体设置,最多可设置3个子项
+// Multimedia 多媒体设置,最多可设置3个子项
 type Multimedia struct {
 	Url      string `json:"url"`                 // 必须，多媒体资源地址
 	Type     int    `json:"type"`                // 必须，资源类型（1.图片，2.音频，3.视频）
 	OnlyWifi bool   `json:"only_wifi,omitempty"` // 非必须，是否只在wifi环境下加载，如果设置成true,但未使用wifi时，会展示成普通通知
 }
 
-// Android厂商通道消息
+// AndroidChannel Android厂商通道消息
 type AndroidChannel struct {
 	Ups *Ups `json:"ups"` // android厂商通道推送消息内容
 }
 
-// Android厂商通道推送消息内容
+// Ups Android厂商通道推送消息内容
 type Ups struct {
 	Notification *Notification `json:"notification"` // 非必须,通知消息内容，与transmission 二选一，两个都填写时报错
 	TransMission string        `json:"transmission"` // 非必须,透传消息内容，与notification 二选一，两个都填写时报错，长度 ≤ 3072

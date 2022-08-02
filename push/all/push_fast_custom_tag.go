@@ -1,13 +1,12 @@
-// 群推-使用标签快速推送
 package all
 
 import (
 	"context"
 	"encoding/json"
-	"github.com/qnsoft/unipush/publics"
+	"github.com/DanPlayer/unipush/publics"
 )
 
-// 使用标签快速推送参数
+// PushFastCustomTagParam 使用标签快速推送参数
 type PushFastCustomTagParam struct {
 	RequestId   string               `json:"request_id"`   // 必须字段，请求唯一标识号，10-32位之间；如果request_id重复，会导致消息丢失
 	Settings    *publics.Settings    `json:"settings"`     // 非必须，推送条件设置
@@ -16,13 +15,13 @@ type PushFastCustomTagParam struct {
 	PushChannel *publics.PushChannel `json:"push_channel"` // 非必须，厂商推送消息参数，包含ios消息参数，android厂商消息参数
 }
 
-// 使用标签快速推送返回
+// PushFastCustomTagResult 使用标签快速推送返回
 type PushFastCustomTagResult struct {
 	publics.PublicResult
 	Data map[string]map[string]string `json:"data"`
 }
 
-// 根据条件筛选用户推送
+// PushFastCustomTag 根据条件筛选用户推送
 func PushFastCustomTag(ctx context.Context, config publics.GeTuiConfig, token string, param *PushFastCustomTagParam) (*PushFastCustomTagResult, error) {
 	url := publics.ApiUrl + config.AppId + "/push/fast_custom_tag"
 	bodyByte, err := json.Marshal(param)

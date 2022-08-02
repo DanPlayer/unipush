@@ -1,23 +1,24 @@
-// 删除定时任务 用来删除还未下发的任务，删除后定时任务不再触发(距离下发还有一分钟的任务，将无法删除，后续可以调用停止任务接口)
 package mission
 
 import (
 	"context"
 	"encoding/json"
-	"github.com/qnsoft/unipush/publics"
+	"github.com/DanPlayer/unipush/publics"
 )
 
-// 删除定时任务参数
+// PushDelTaskParam 删除定时任务参数
 type PushDelTaskParam struct {
 	TaskId string `json:"taskId"`
 }
 
-// 删除定时任务返回
+// PushDelTaskResult 删除定时任务返回
 type PushDelTaskResult struct {
 	publics.PublicResult
 }
 
+// PushDelTask
 // 删除定时任务
+// 删除定时任务 用来删除还未下发的任务，删除后定时任务不再触发(距离下发还有一分钟的任务，将无法删除，后续可以调用停止任务接口)
 func PushDelTask(ctx context.Context, config publics.GeTuiConfig, token string, param *PushDelTaskParam) (*PushDelTaskResult, error) {
 	url := publics.ApiUrl + config.AppId + "/task/schedule" + param.TaskId
 	bodyByte, err := json.Marshal(param)

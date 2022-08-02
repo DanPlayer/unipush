@@ -1,18 +1,17 @@
-// 查询定时任务 该接口支持在推送完定时任务之后，查看定时任务状态，定时任务是否发送成功。
 package mission
 
 import (
 	"context"
 	"encoding/json"
-	"github.com/qnsoft/unipush/publics"
+	"github.com/DanPlayer/unipush/publics"
 )
 
-// 查询定时任务参数
+// PushGetTaskParam 查询定时任务参数
 type PushGetTaskParam struct {
 	TaskId string `json:"taskId"`
 }
 
-// 查询定时任务返回
+// PushGetTaskResult 查询定时任务返回
 type PushGetTaskResult struct {
 	publics.PublicResult
 	Data map[string]map[string]string `json:"data"`
@@ -28,7 +27,9 @@ type PushGetTaskResult struct {
 //	 }
 // }
 
-// 停止任务
+// PushGetTask
+// 查询定时任务
+// 查询定时任务 该接口支持在推送完定时任务之后，查看定时任务状态，定时任务是否发送成功。
 func PushGetTask(ctx context.Context, config publics.GeTuiConfig, token string, param *PushGetTaskParam) (*PushGetTaskResult, error) {
 	url := publics.ApiUrl + config.AppId + "/task/schedule" + param.TaskId
 	bodyByte, err := json.Marshal(param)

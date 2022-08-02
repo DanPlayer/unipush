@@ -16,7 +16,7 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
-	"github.com/qnsoft/unipush/publics"
+	"github.com/DanPlayer/unipush/publics"
 )
 
 type TokenParam struct {
@@ -25,19 +25,19 @@ type TokenParam struct {
 	AppKey    string `json:"appkey"`    // 创建应用时生成的appkey
 }
 
-// Token返回结构
+// TokenResult Token返回结构
 type TokenResult struct {
 	publics.PublicResult
 	Data TokenResultData
 }
 
-// Token返回的data结构
+// TokenResultData Token返回的data结构
 type TokenResultData struct {
 	ExpireTime string `json:"expire_time"`
 	Token      string `json:"token"`
 }
 
-// 获取token
+// GetToken 获取token
 func GetToken(ctx context.Context, config publics.GeTuiConfig) (TokenResult, error) {
 	tokenResult := TokenResult{}
 	// 获取加密字符串和时间戳
@@ -67,7 +67,7 @@ func GetToken(ctx context.Context, config publics.GeTuiConfig) (TokenResult, err
 	return tokenResult, nil
 }
 
-// 删除token，为防止token被滥用或泄露，开发者可以调用此接口主动使token失效
+// DelToken 删除token，为防止token被滥用或泄露，开发者可以调用此接口主动使token失效
 func DelToken(ctx context.Context, token string, config publics.GeTuiConfig) (publics.PublicResult, error) {
 	publicResult := publics.PublicResult{}
 	url := publics.ApiUrl + config.AppId + "/auth/" + token
